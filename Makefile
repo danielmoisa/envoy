@@ -8,7 +8,7 @@ build-http-server:
 	go build -o bin/envoy-builder src/cmd/envoy-builder/main.go
 
 start:
-	src/cmd/envoy-builder/main.go
+	go run src/cmd/envoy-builder/main.go
 
 test:
 	PROJECT_PWD=$(shell pwd) go test -race ./...

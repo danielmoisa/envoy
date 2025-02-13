@@ -55,7 +55,7 @@ func (d *TeamDrive) GetAIAgentIconUploadPreSignedURL(fileName string) (string, e
 
 func FormatTeamIconURL(url string) string {
 	conf := config.GetInstance()
-	if conf.DriveType == config.DRIVE_TYPE_DO {
+	if conf.GetDriveType() == config.DRIVE_TYPE_DO {
 		return strings.Replace(url, DIGITALOCEAN_REPLACE_TARGET_FOR_TEAM, "", -1)
 	}
 	return url

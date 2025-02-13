@@ -91,7 +91,7 @@ func (server *Server) Start() {
 	server.logger.Infow("Starting envoy-builder...")
 
 	// init
-	gin.SetMode(server.config.ServerMode)
+	gin.SetMode(server.config.GetServerMode())
 
 	// init cors
 	// server.engine.Use(gin.CustomRecovery(recovery.CorsHandleRecovery))
@@ -99,7 +99,7 @@ func (server *Server) Start() {
 	server.router.RegisterRoutes(server.engine)
 
 	// run
-	err := server.engine.Run(server.config.ServerHost + ":" + server.config.ServerPort)
+	err := server.engine.Run(server.config.GetServerHost() + ":" + server.config.GetServerPort())
 	if err != nil {
 		server.logger.Errorw("Error in startup", "err", err)
 		os.Exit(2)
