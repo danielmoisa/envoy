@@ -13,11 +13,11 @@ import (
 const RETRY_TIMES = 6
 
 type PostgresConfig struct {
-	Addr     string `env:"ILLA_PG_ADDR" envDefault:"localhost"`
-	Port     string `env:"ILLA_PG_PORT" envDefault:"5433"`
-	User     string `env:"ILLA_PG_USER" envDefault:"illa_cloud"`
-	Password string `env:"ILLA_PG_PASSWORD" envDefault:"illa2022"`
-	Database string `env:"ILLA_PG_DATABASE" envDefault:"illa_cloud"`
+	Addr     string `env:"ENVOY_PG_ADDR" envDefault:"localhost"`
+	Port     string `env:"ENVOY_PG_PORT" envDefault:"5433"`
+	User     string `env:"ENVOY_PG_USER" envDefault:"envoy_cloud"`
+	Password string `env:"ENVOY_PG_PASSWORD" envDefault:"envoypass"`
+	Database string `env:"ENVOY_PG_DATABASE" envDefault:"envoy_cloud"`
 }
 
 func NewPostgresConnectionByGlobalConfig(config *config.Config, logger *zap.SugaredLogger) (*gorm.DB, error) {

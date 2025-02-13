@@ -9,7 +9,7 @@ import (
 var logger *zap.SugaredLogger
 
 type LogConfig struct {
-	ILLA_LOG_LEVEL int `env:"ILLA_LOG_LEVEL" envDefault:"0"`
+	ENVOY_LOG_LEVEL int `env:"ENVOY_LOG_LEVEL" envDefault:"0"`
 }
 
 func init() {
@@ -20,7 +20,7 @@ func init() {
 	}
 
 	logConfig := zap.NewProductionConfig()
-	logConfig.Level = zap.NewAtomicLevelAt(zapcore.Level(cfg.ILLA_LOG_LEVEL))
+	logConfig.Level = zap.NewAtomicLevelAt(zapcore.Level(cfg.ENVOY_LOG_LEVEL))
 	baseLogger, err := logConfig.Build()
 	if err != nil {
 		panic("failed to create the default logger: " + err.Error())

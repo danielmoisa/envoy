@@ -24,10 +24,10 @@ const (
 	DRIVE_TYPE_SYSTEM = 1
 	DRIVE_TYPE_TEAM   = 2
 )
-const AWS_DRIVE_URL_ILLA_CLOUD = "envoy-cloud-storage.envoycloud.com.s3.ap-northeast-1.amazonaws.com"
-const AWS_DRIVE_URL_ILLA_CLOUD_TEAM = "envoy-cloud-team-storage.envoycloud.com.s3.ap-northeast-1.amazonaws.com"
-const ILLA_DRIVE_URL_ILLA_CLOUD = "envoy-cloud-storage.envoycloud.com"
-const ILLA_DRIVE_URL_ILLA_CLOUD_TEAM = "envoy-cloud-team-storage.envoycloud.com"
+const AWS_DRIVE_URL_ENVOY_CLOUD = "envoy-cloud-storage.envoycloud.com.s3.ap-northeast-1.amazonaws.com"
+const AWS_DRIVE_URL_ENVOY_CLOUD_TEAM = "envoy-cloud-team-storage.envoycloud.com.s3.ap-northeast-1.amazonaws.com"
+const ENVOY_DRIVE_URL_ENVOY_CLOUD = "envoy-cloud-storage.envoycloud.com"
+const ENVOY_DRIVE_URL_ENVOY_CLOUD_TEAM = "envoy-cloud-team-storage.envoycloud.com"
 
 func NewAWSConfig(endpoint string, accessKeyID string, accessKeySecret string, region string, bucketName string, uploadTimeout int) *AWSConfig {
 	timeout := time.Duration(uploadTimeout)

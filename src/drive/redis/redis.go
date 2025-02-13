@@ -9,10 +9,10 @@ import (
 const RETRY_TIMES = 6
 
 type RedisConfig struct {
-	Addr     string `env:"ILLA_REDIS_ADDR" envDefault:"localhost"`
-	Port     string `env:"ILLA_REDIS_PORT" envDefault:"6379"`
-	Password string `env:"ILLA_REDIS_PASSWORD" envDefault:"illa2022"`
-	Database int    `env:"ILLA_REDIS_DATABASE" envDefault:"0"`
+	Addr     string `env:"ENVOY_REDIS_ADDR" envDefault:"localhost"`
+	Port     string `env:"ENVOY_REDIS_PORT" envDefault:"6379"`
+	Password string `env:"ENVOY_REDIS_PASSWORD" envDefault:"envoypass"`
+	Database int    `env:"ENVOY_REDIS_DATABASE" envDefault:"0"`
 }
 
 func NewRedisConnectionByGlobalConfig(config *config.Config, logger *zap.SugaredLogger) (*redis.Client, error) {
