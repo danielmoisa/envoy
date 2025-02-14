@@ -7,5 +7,24 @@ info:
   termsOfService: http://example.com/terms/
   title: Envoy Builder API
   version: "1.0"
-paths: {}
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Returns the server health status as a simple "OK" message.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get the health status of the server
+      tags:
+      - health
 swagger: "2.0"
