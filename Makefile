@@ -10,6 +10,9 @@ build-http-server:
 start:
 	go run src/cmd/envoy-builder/main.go
 
+swagger:
+	swag init --dir ./src/cmd/envoy-builder
+	
 test:
 	PROJECT_PWD=$(shell pwd) go test -race ./...
 

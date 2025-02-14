@@ -1,0 +1,15 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample API",
+        "title": "Envoy Builder API",
+        "termsOfService": "http://example.com/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://example.com/support",
+            "email": "support@example.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {}
+}

@@ -171,6 +171,11 @@ func (c *Config) IsMINIODrive() bool {
 	return c.GetDriveType() == DRIVE_TYPE_MINIO
 }
 
+// TODO: make this work with zap loggin
+func (c *Config) GetLogLevel() string {
+	return getEnv("ENVOY_LOG_LEVEL")
+}
+
 // AWS/S3 Compatibility Methods
 func (c *Config) GetAWSS3Endpoint() string         { return c.GetDriveEndpoint() }
 func (c *Config) GetAWSS3AccessKeyID() string      { return c.GetDriveAccessKeyID() }

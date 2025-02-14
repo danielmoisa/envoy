@@ -15,6 +15,7 @@ import (
 	"github.com/danielmoisa/envoy/src/utils/cors"
 	"github.com/danielmoisa/envoy/src/utils/logger"
 	"github.com/danielmoisa/envoy/src/utils/recovery"
+	"github.com/danielmoisa/envoy/src/utils/swagger"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -76,6 +77,9 @@ func initServer() (*Server, error) {
 	cache := initCache(globalConfig, sugaredLogger)
 	drive := initDrive(globalConfig, sugaredLogger)
 
+	// Initialize Swagger UI and documentation
+	swagger.InitSwagger(engine)
+
 	// init attribute group
 	// attrg, errInNewAttributeGroup := accesscontrol.NewRawAttributeGroup()
 	// if errInNewAttributeGroup != nil {
@@ -109,6 +113,13 @@ func (server *Server) Start() {
 	}
 }
 
+// @title Envoy Builder API
+// @version 1.0
+// @description This is a sample API
+// @termsOfService http://example.com/terms/
+// @contact.name API Support
+// @contact.url http://example.com/support
+// @contact.email support@example.com
 func main() {
 	server, err := initServer()
 

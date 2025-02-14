@@ -1,0 +1,11 @@
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://example.com/support
+  description: This is a sample API
+  termsOfService: http://example.com/terms/
+  title: Envoy Builder API
+  version: "1.0"
+paths: {}
+swagger: "2.0"
