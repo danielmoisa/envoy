@@ -34,11 +34,14 @@ func GetInstance() *Config {
 	return instance
 }
 
-func getEnv(key, fallback string) string {
+func getEnv(key string, fallback ...string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
 	}
-	return fallback
+	if len(fallback) > 0 {
+		return fallback[0]
+	}
+	return ""
 }
 
 // Server Config Getters
@@ -55,12 +58,12 @@ func (c *Config) GetServerMode() string {
 }
 
 func (c *Config) GetSecretKey() string {
-	return getEnv("ENVOY_SECRET_KEY", "8xEMrWkBARcDDYQ")
+	return getEnv("ENVOY_SECRET_KEY")
 }
 
 // ID Converter Getter
 func (c *Config) GetRandomKey() string {
-	return getEnv("ENVOY_RANDOM_KEY", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	return getEnv("ENVOY_RANDOM_KEY")
 }
 
 // Postgres Config Getters
@@ -77,11 +80,11 @@ func (c *Config) GetPostgresUser() string {
 }
 
 func (c *Config) GetPostgresPassword() string {
-	return getEnv("ENVOY_PG_PASSWORD", "password")
+	return getEnv("ENVOY_PG_PASSWORD")
 }
 
 func (c *Config) GetPostgresDatabase() string {
-	return getEnv("ENVOY_PG_DATABASE", "envoy")
+	return getEnv("ENVOY_PG_DATABASE")
 }
 
 func (c *Config) GetPostgresConnectionString() string {
@@ -104,11 +107,11 @@ func (c *Config) GetRedisPort() string {
 }
 
 func (c *Config) GetRedisPassword() string {
-	return getEnv("ENVOY_REDIS_PASSWORD", "")
+	return getEnv("ENVOY_REDIS_PASSWORD")
 }
 
 func (c *Config) GetRedisDatabase() int {
-	val := getEnv("ENVOY_REDIS_DATABASE", "0")
+	val := getEnv("ENVOY_REDIS_DATABASE")
 	db, err := strconv.Atoi(val)
 	if err != nil {
 		return 0
