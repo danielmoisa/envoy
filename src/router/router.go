@@ -34,6 +34,10 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 	// oauth2Router := routerGroup.Group("/oauth2")
 	// flowActionRouter := routerGroup.Group("/teams/:teamID/workflow/:workflowID/flowActions")
 	healthRouter := routerGroup.Group("/health")
+	usersRouter := routerGroup.Group("/users")
+
+	// Users routes
+	usersRouter.GET(":teamId", r.Controller.GetAllUsers)
 
 	// Health Routes
 	healthRouter.GET("", r.Controller.GetHealth)
