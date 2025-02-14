@@ -12,7 +12,9 @@ import (
 	"github.com/danielmoisa/envoy/src/router"
 	"github.com/danielmoisa/envoy/src/storage"
 	"github.com/danielmoisa/envoy/src/utils/config"
+	"github.com/danielmoisa/envoy/src/utils/cors"
 	"github.com/danielmoisa/envoy/src/utils/logger"
+	"github.com/danielmoisa/envoy/src/utils/recovery"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -55,7 +57,8 @@ func initDrive(globalConfig *config.Config, logger *zap.SugaredLogger) *drive.Dr
 		teamDriveS3Instance := s3.NewS3Drive(teamAWSConfig)
 		return drive.NewDrive(teamDriveS3Instance, logger)
 	}
-	// failed
+
+	// Failed
 	logger.Errorw("Error in startup, drive init failed.")
 	return nil
 }
@@ -68,7 +71,7 @@ func initServer() (*Server, error) {
 	// init validator
 	// validator := tokenvalidator.NewRequestTokenValidator()
 
-	// init driver
+	// Init driver
 	storage := initStorage(globalConfig, sugaredLogger)
 	cache := initCache(globalConfig, sugaredLogger)
 	drive := initDrive(globalConfig, sugaredLogger)
@@ -79,7 +82,7 @@ func initServer() (*Server, error) {
 	// 	return nil, errInNewAttributeGroup
 	// }
 
-	// init controller
+	// Init controller
 	c := controller.NewControllerForBackend(storage, cache, drive)
 	router := router.NewRouter(c)
 	server := NewServer(globalConfig, engine, router, sugaredLogger)
@@ -90,15 +93,15 @@ func initServer() (*Server, error) {
 func (server *Server) Start() {
 	server.logger.Infow("Starting envoy-builder...")
 
-	// init
+	// Init
 	gin.SetMode(server.config.GetServerMode())
 
-	// init cors
-	// server.engine.Use(gin.CustomRecovery(recovery.CorsHandleRecovery))
-	// server.engine.Use(cors.Cors())
+	// Init cors
+	server.engine.Use(gin.CustomRecovery(recovery.CorsHandleRecovery))
+	server.engine.Use(cors.Cors())
 	server.router.RegisterRoutes(server.engine)
 
-	// run
+	// Run
 	err := server.engine.Run(server.config.GetServerHost() + ":" + server.config.GetServerPort())
 	if err != nil {
 		server.logger.Errorw("Error in startup", "err", err)
