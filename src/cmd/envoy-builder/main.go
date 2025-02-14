@@ -113,7 +113,7 @@ func main() {
 	server, err := initServer()
 
 	if err != nil {
-
+		server.logger.Errorw("Error initializing server: %v", err)
 	}
 
 	server.Start()
