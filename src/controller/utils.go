@@ -183,19 +183,19 @@ var SKIPPING_MAGIC_ID = map[string]int{
 	"-3": -3,
 }
 
-func (controller *Controller) GetStringFromFormData(c *gin.Context, paramName string) (string, error) {
+func (ctrl *Controller) GetStringFromFormData(c *gin.Context, paramName string) (string, error) {
 	// get request param
 	paramValue := c.PostFormArray(paramName)
 
 	// ho hit, convert
 	if len(paramValue) == 0 {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
 		return "", errors.New("input missing " + paramName + " field.")
 	}
 	return paramValue[0], nil
 }
 
-func (controller *Controller) GetOptionalStringFromFormData(c *gin.Context, paramName string) string {
+func (ctrl *Controller) GetOptionalStringFromFormData(c *gin.Context, paramName string) string {
 	// get request param
 	paramValue := c.PostFormArray(paramName)
 
@@ -206,7 +206,7 @@ func (controller *Controller) GetOptionalStringFromFormData(c *gin.Context, para
 	return paramValue[0]
 }
 
-func (controller *Controller) GetMagicIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
+func (ctrl *Controller) GetMagicIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
 	// get request param
 	paramValue := c.Param(paramName)
 	// check skipping id
@@ -215,7 +215,7 @@ func (controller *Controller) GetMagicIntParamFromRequest(c *gin.Context, paramN
 	}
 	// ho hit, convert
 	if len(paramValue) == 0 {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
 		return 0, errors.New("input missing " + paramName + " field.")
 	}
 	paramValueInt := idconvertor.ConvertStringToInt(paramValue)
@@ -223,7 +223,7 @@ func (controller *Controller) GetMagicIntParamFromRequest(c *gin.Context, paramN
 }
 
 // test if Magic int exists in param, if not ,return 0 and an error.
-func (controller *Controller) TestMagicIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
+func (ctrl *Controller) TestMagicIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
 	// get request param
 	paramValue := c.Param(paramName)
 	if len(paramValue) == 0 {
@@ -233,32 +233,32 @@ func (controller *Controller) TestMagicIntParamFromRequest(c *gin.Context, param
 	return paramValueInt, nil
 }
 
-func (controller *Controller) GetIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
+func (ctrl *Controller) GetIntParamFromRequest(c *gin.Context, paramName string) (int, error) {
 	// get request param
 	paramValue := c.Param(paramName)
 	if len(paramValue) == 0 {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
 		return 0, errors.New("input missing " + paramName + " field.")
 	}
 	paramValueInt, okAssert := strconv.Atoi(paramValue)
 	if okAssert != nil {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param in int format.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param in int format.")
 		return 0, errors.New("input teamID in wrong format.")
 	}
 	return paramValueInt, nil
 }
 
-func (controller *Controller) GetStringParamFromRequest(c *gin.Context, paramName string) (string, error) {
+func (ctrl *Controller) GetStringParamFromRequest(c *gin.Context, paramName string) (string, error) {
 	// get request param
 	paramValue := c.Param(paramName)
 	if len(paramValue) == 0 {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
 		return "", errors.New("input missing " + paramName + " field.")
 	}
 	return paramValue, nil
 }
 
-func (controller *Controller) TestStringParamFromRequest(c *gin.Context, paramName string) (string, error) {
+func (ctrl *Controller) TestStringParamFromRequest(c *gin.Context, paramName string) (string, error) {
 	// get request param
 	paramValue := c.Param(paramName)
 	if len(paramValue) == 0 {
@@ -267,7 +267,7 @@ func (controller *Controller) TestStringParamFromRequest(c *gin.Context, paramNa
 	return paramValue, nil
 }
 
-func (controller *Controller) TestFirstStringParamValueFromURI(c *gin.Context, paramName string) (string, error) {
+func (ctrl *Controller) TestFirstStringParamValueFromURI(c *gin.Context, paramName string) (string, error) {
 	valueMaps := c.Request.URL.Query()
 	paramValues, hit := valueMaps[paramName]
 	// get request param
@@ -277,33 +277,33 @@ func (controller *Controller) TestFirstStringParamValueFromURI(c *gin.Context, p
 	return paramValues[0], nil
 }
 
-func (controller *Controller) GetFirstStringParamValueFromURI(c *gin.Context, paramName string) (string, error) {
+func (ctrl *Controller) GetFirstStringParamValueFromURI(c *gin.Context, paramName string) (string, error) {
 	valueMaps := c.Request.URL.Query()
 	paramValues, hit := valueMaps[paramName]
 	// get request param
 	if !hit {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
 		return "", errors.New("input missing " + paramName + " field.")
 	}
 	return paramValues[0], nil
 }
 
-func (controller *Controller) GetStringParamValuesFromURI(c *gin.Context, paramName string) ([]string, error) {
+func (ctrl *Controller) GetStringParamValuesFromURI(c *gin.Context, paramName string) ([]string, error) {
 	valueMaps := c.Request.URL.Query()
 	paramValues, hit := valueMaps[paramName]
 	// get request param
 	if !hit {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "please input param for request.")
 		return nil, errors.New("input missing " + paramName + " field.")
 	}
 	return paramValues, nil
 }
 
-func (controller *Controller) GetStringParamFromHeader(c *gin.Context, paramName string) (string, error) {
+func (ctrl *Controller) GetStringParamFromHeader(c *gin.Context, paramName string) (string, error) {
 	paramValue := c.Request.Header[paramName]
 	var ret string
 	if len(paramValue) != 1 {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "can not fetch param from header.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_PARAM_FAILED, "can not fetch param from header.")
 		return "", errors.New("can not fetch param from header.")
 	} else {
 		ret = paramValue[0]
@@ -312,22 +312,22 @@ func (controller *Controller) GetStringParamFromHeader(c *gin.Context, paramName
 }
 
 // @note: this param was setted by authenticator.JWTAuth() method
-func (controller *Controller) GetUserIDFromAuth(c *gin.Context) (int, error) {
+func (ctrl *Controller) GetUserIDFromAuth(c *gin.Context) (int, error) {
 	// get request param
 	userID, ok := c.Get("userID")
 	if !ok {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_TOKEN_FAILED, "auth token invalied, can not fetch user ID in it.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_TOKEN_FAILED, "auth token invalied, can not fetch user ID in it.")
 		return 0, errors.New("input missing userID field.")
 	}
 	userIDInt, okAssert := userID.(int)
 	if !okAssert {
-		controller.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_TOKEN_FAILED, "auth token invalied,user ID is not int type in it.")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_VALIDATE_REQUEST_TOKEN_FAILED, "auth token invalied,user ID is not int type in it.")
 		return 0, errors.New("input userID in wrong format.")
 	}
 	return userIDInt, nil
 }
 
-func (controller *Controller) FeedbackOK(c *gin.Context, resp response.Response) {
+func (ctrl *Controller) FeedbackOK(c *gin.Context, resp response.Response) {
 	if resp != nil {
 		c.JSON(http.StatusOK, resp.ExportForFeedback())
 		return
@@ -336,7 +336,7 @@ func (controller *Controller) FeedbackOK(c *gin.Context, resp response.Response)
 	c.JSON(http.StatusOK, nil)
 }
 
-func (controller *Controller) FeedbackCreated(c *gin.Context, resp response.Response) {
+func (ctrl *Controller) FeedbackCreated(c *gin.Context, resp response.Response) {
 	if resp != nil {
 		c.JSON(http.StatusCreated, resp.ExportForFeedback())
 		return
@@ -345,7 +345,7 @@ func (controller *Controller) FeedbackCreated(c *gin.Context, resp response.Resp
 	c.JSON(http.StatusCreated, nil)
 }
 
-func (controller *Controller) FeedbackBadRequest(c *gin.Context, errorFlag string, errorMessage string) {
+func (ctrl *Controller) FeedbackBadRequest(c *gin.Context, errorFlag string, errorMessage string) {
 	c.JSON(http.StatusBadRequest, gin.H{
 		"errorCode":    400,
 		"errorFlag":    errorFlag,
@@ -354,12 +354,12 @@ func (controller *Controller) FeedbackBadRequest(c *gin.Context, errorFlag strin
 	return
 }
 
-func (controller *Controller) FeedbackRedirect(c *gin.Context, uri string) {
+func (ctrl *Controller) FeedbackRedirect(c *gin.Context, uri string) {
 	c.Redirect(302, uri)
 	return
 }
 
-func (controller *Controller) FeedbackInternalServerError(c *gin.Context, errorFlag string, errorMessage string) {
+func (ctrl *Controller) FeedbackInternalServerError(c *gin.Context, errorFlag string, errorMessage string) {
 	c.JSON(http.StatusInternalServerError, gin.H{
 		"errorCode":    500,
 		"errorFlag":    errorFlag,

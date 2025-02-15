@@ -48,9 +48,10 @@ func (impl *UsersStorage) RetrieveByTeamID(teamID int) ([]*model.User, error) {
 	return resources, nil
 }
 
-func (impl *UsersStorage) RetrieveByUserID(userID int) (*model.User, error) {
+func (impl *UsersStorage) RetrieveByUserID(teamID, userID int) (*model.User, error) {
 	var user *model.User
-	if err := impl.db.Where("id = ?", userID).First(&user).Error; err != nil {
+
+	if err := impl.db.Where("id = ? AND team_id = ?", userID, teamID).First(&user).Error; err != nil {
 		return &model.User{}, err
 	}
 	return user, nil

@@ -73,9 +73,9 @@ func initServer() (*Server, error) {
 	// validator := tokenvalidator.NewRequestTokenValidator()
 
 	// Init driver
-	storage := initStorage(globalConfig, sugaredLogger)
-	cache := initCache(globalConfig, sugaredLogger)
-	drive := initDrive(globalConfig, sugaredLogger)
+	appStorage := initStorage(globalConfig, sugaredLogger)
+	appCache := initCache(globalConfig, sugaredLogger)
+	appDrive := initDrive(globalConfig, sugaredLogger)
 
 	// Initialize Swagger UI and documentation
 	swagger.InitSwagger(engine)
@@ -87,9 +87,9 @@ func initServer() (*Server, error) {
 	// }
 
 	// Init controller
-	c := controller.NewControllerForBackend(storage, cache, drive)
-	router := router.NewRouter(c)
-	server := NewServer(globalConfig, engine, router, sugaredLogger)
+	c := controller.NewControllerForBackend(appStorage, appCache, appDrive)
+	appRouter := router.NewRouter(c)
+	server := NewServer(globalConfig, engine, appRouter, sugaredLogger)
 	return server, nil
 
 }

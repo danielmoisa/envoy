@@ -38,7 +38,7 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 
 	// Users routes
 	usersRouter.GET("/:teamId", r.Controller.GetAllUsers)
-	usersRouter.GET("/:userId", r.Controller.GetUser)
+	usersRouter.GET("/teamId/:userId", r.Controller.GetUser)
 
 	// Health Routes
 	healthRouter.GET("", r.Controller.GetHealth)

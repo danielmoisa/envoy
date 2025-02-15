@@ -15,6 +15,6 @@ import (
 // @Success 200 {string} string "OK"
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /health [get]
-func (controller *Controller) GetHealth(c *gin.Context) {
+func (ctrl *Controller) GetHealth(c *gin.Context) {
 	c.JSON(http.StatusOK, "OK")
 }

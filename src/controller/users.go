@@ -48,21 +48,22 @@ func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param userId path int true "User ID"
-// @Success 200 {object} model.User "User details"
+// @Success 200 {object} UserResponse "User details"
 // @Failure 400 {object} map[string]string "Bad Request"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users/{userId} [get]
 func (ctrl *Controller) GetUser(c *gin.Context) {
-	// Fetch userId param
+	// Fetch params
+	teamID, err := strconv.Atoi(c.Param("teamId"))
 	userID, err := strconv.Atoi(c.Param("userId"))
 
-	//TODO: return err for user
+	//TODO: return err for params
 	if err != nil {
 		return
 	}
 
 	// Fetch data
-	user, err := ctrl.Storage.UsersStorage.RetrieveByUserID(userID)
+	user, err := ctrl.Storage.UsersStorage.RetrieveByUserID(teamID, userID)
 	if err != nil {
 		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_RESOURCE, "get user by id error: "+err.Error())
 		return
