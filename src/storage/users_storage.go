@@ -48,6 +48,14 @@ func (impl *UsersStorage) RetrieveByTeamID(teamID int) ([]*model.User, error) {
 	return resources, nil
 }
 
+func (impl *UsersStorage) RetrieveByUserID(userID int) (*model.User, error) {
+	var user *model.User
+	if err := impl.db.Where("id = ?", userID).First(&user).Error; err != nil {
+		return &model.User{}, err
+	}
+	return user, nil
+}
+
 // func (impl *ResourceStorage) RetrieveAllByUpdatedTime(teamID int) ([]*model.Resource, error) {
 // 	var resources []*model.Resource
 // 	if err := impl.db.Where("team_id = ?", teamID).Order("updated_at desc").Find(&resources).Error; err != nil {

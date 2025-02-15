@@ -40,3 +40,25 @@ func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 	// Response
 	c.JSON(http.StatusOK, users)
 }
+
+func (ctrl *Controller) GetUser(c *gin.Context) {
+	// Fetch userId param
+	userID, err := strconv.Atoi(c.Param("userId"))
+
+	//TODO: return err for user
+	if err != nil {
+		return
+	}
+
+	// Fetch data
+	user, err := ctrl.Storage.UsersStorage.RetrieveByUserID(userID)
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_RESOURCE, "get users by team id error: "+err.Error())
+		return
+	}
+
+	// Response
+	c.JSON(http.StatusOK, user)
+	return
+
+}
