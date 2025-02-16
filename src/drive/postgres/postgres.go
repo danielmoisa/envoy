@@ -2,9 +2,9 @@ package postgres
 
 import (
 	"fmt"
+	"github.com/danielmoisa/envoy/src/model"
 	"time"
 
-	"github.com/danielmoisa/envoy/src/model"
 	"github.com/danielmoisa/envoy/src/utils/config"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
@@ -74,7 +74,10 @@ func NewPostgresConnection(config *PostgresConfig, logger *zap.SugaredLogger) (*
 	}
 
 	// Enable automatic migrations
-	db.AutoMigrate(&model.Team{}, &model.User{})
+	err = db.AutoMigrate(&model.Team{}, &model.User{})
+	if err != nil {
+		return nil, err
+	}
 
 	logger.Infow("connected with db", "db", config)
 
