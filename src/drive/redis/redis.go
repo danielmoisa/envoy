@@ -6,9 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const RETRY_TIMES = 6
-
-type RedisConfig struct {
+type Config struct {
 	Addr     string `env:"ENVOY_REDIS_ADDR" envDefault:"localhost"`
 	Port     string `env:"ENVOY_REDIS_PORT" envDefault:"6379"`
 	Password string `env:"ENVOY_REDIS_PASSWORD" envDefault:"envoypass"`
@@ -16,7 +14,7 @@ type RedisConfig struct {
 }
 
 func NewRedisConnectionByGlobalConfig(config *config.Config, logger *zap.SugaredLogger) (*redis.Client, error) {
-	redisConfig := &RedisConfig{
+	redisConfig := &Config{
 		Addr:     config.GetRedisAddr(),
 		Port:     config.GetRedisPort(),
 		Password: config.GetRedisPassword(),
@@ -25,7 +23,7 @@ func NewRedisConnectionByGlobalConfig(config *config.Config, logger *zap.Sugared
 	return NewRedisConnection(redisConfig, logger)
 }
 
-func NewRedisConnection(config *RedisConfig, logger *zap.SugaredLogger) (*redis.Client, error) {
+func NewRedisConnection(config *Config, logger *zap.SugaredLogger) (*redis.Client, error) {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     config.Addr + ":" + config.Port,
 		Password: config.Password,

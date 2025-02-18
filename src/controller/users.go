@@ -25,15 +25,15 @@ func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 	// Fetch teamID param
 	teamID, errInGetTeamID := strconv.Atoi(c.Param("teamId"))
 
-	//TODO: return err for user
 	if errInGetTeamID != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_RESOURCE, "get users by team id error: "+errInGetTeamID.Error())
 		return
 	}
 
 	// Fetch data
 	users, errInRetrieveUsers := ctrl.Storage.UsersStorage.RetrieveByTeamID(teamID)
 	if errInRetrieveUsers != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_RESOURCE, "get users by team id error: "+errInRetrieveUsers.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_TEAM, "get users by team id error: "+errInRetrieveUsers.Error())
 		return
 	}
 
@@ -57,8 +57,8 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 	teamID, err := strconv.Atoi(c.Param("teamId"))
 	userID, err := strconv.Atoi(c.Param("userId"))
 
-	//TODO: return err for params
 	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_TEAM, "get users by team id error: "+err.Error())
 		return
 	}
 
