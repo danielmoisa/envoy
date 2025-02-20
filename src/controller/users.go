@@ -72,3 +72,29 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 	// Response
 	c.JSON(http.StatusOK, user)
 }
+
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param User body models.User true "User details"
+// @Success 201 {object} UserResponse "User created successfully"
+// @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 500 {object} map[string]string "Internal Server Error"
+// @Router /users [post]
+// @Summary Create a new user
+// @Description Create a new user
+func (ctrl *Controller) CreateUser(c *gin.Context) {
+	user := &model.User{}
+	if err := c.ShouldBindJSON(user); err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_RESOURCE, "create user error: "+err.Error())
+		return
+	}
+
+	user, err := ctrl.Storage.UsersStorage.Create(user.Nickname, user.Email, user.PasswordDigest, user.Avatar)
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_RESOURCE, "create user error: "+err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}

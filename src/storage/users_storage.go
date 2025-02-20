@@ -57,6 +57,19 @@ func (impl *UsersStorage) RetrieveByUserID(teamID, userID int) (*model.User, err
 	return user, nil
 }
 
+func (impl *UsersStorage) Create(name, email, password, avatar string) (*model.User, error) {
+	user := &model.User{
+		Nickname:       name,
+		Email:          email,
+		PasswordDigest: password,
+		Avatar:         avatar,
+	}
+	if err := impl.db.Create(user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 // func (impl *ResourceStorage) RetrieveAllByUpdatedTime(teamID int) ([]*model.Resource, error) {
 // 	var resources []*model.Resource
 // 	if err := impl.db.Where("team_id = ?", teamID).Order("updated_at desc").Find(&resources).Error; err != nil {

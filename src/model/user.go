@@ -36,9 +36,6 @@ type User struct {
 	PasswordDigest string    `json:"passworddigest" gorm:"column:password_digest;type:varchar;size:60;not null"`
 	Email          string    `json:"email" gorm:"column:email;type:varchar;size:255;not null"`
 	Avatar         string    `json:"avatar" gorm:"column:avatar;type:varchar;size:255;not null"`
-	SSOConfig      string    `json:"SSOConfig" gorm:"column:sso_config;type:jsonb"`        // for single sign-on data
-	Customization  string    `json:"customization" gorm:"column:customization;type:jsonb"` // for user itself customization config, including: Language, IsSubscribed
-	TeamID         int       `json:"teamID" gorm:"column:team_id;type:bigint"`
 	CreatedAt      time.Time `gorm:"column:created_at;type:timestamp"`
 	UpdatedAt      time.Time `gorm:"column:updated_at;type:timestamp"`
 }
@@ -66,8 +63,6 @@ func NewUser(u *RawUser) *User {
 		PasswordDigest: u.PasswordDigest,
 		Email:          u.Email,
 		Avatar:         u.Avatar,
-		SSOConfig:      u.SSOConfig,
-		Customization:  u.Customization,
 		CreatedAt:      u.CreatedAt,
 		UpdatedAt:      u.UpdatedAt,
 	}
