@@ -8,16 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserResponse *model.User
+type UserDTO *model.User
 
-// GetAllUsers retrieves all users for a given team
-// @Summary Get all users by team ID
-// @Description Fetch all users belonging to a specific team
+// GetAllUsers retrieves all users
+// @Summary Get all users
+// @Description Fetch all users
 // @Tags Users
 // @Accept  json
 // @Produce  json
-// @Param team_id path int true "Team ID"
-// @Success 200 {array} UserResponse
+// @Success 200 {array} UserDTO
 // @Failure 400
 // @Failure 500
 // @Router /users [get]
@@ -41,7 +40,7 @@ func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param userId path int true "User ID"
-// @Success 200 {object} UserResponse "User details"
+// @Success 200 {object} UserDTO "User details"
 // @Failure 400 {object} map[string]string "Bad Request"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users/{userId} [get]
@@ -69,8 +68,8 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param User body models.User true "User details"
-// @Success 201 {object} UserResponse "User created successfully"
+// @Param User body UserDTO true "User details"
+// @Success 201 {object} UserDTO "User created successfully"
 // @Failure 400 {object} map[string]string "Bad Request"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users [post]

@@ -11,7 +11,7 @@ start:
 	go run src/cmd/envoy-builder/main.go
 
 swagger:
-	swag init --pd -g /src/cmd/envoy-builder/main.go
+	swag init --pd -g ./src/cmd/envoy-builder/main.go
 	
 test:
 	PROJECT_PWD=$(shell pwd) go test -race ./...
@@ -32,9 +32,6 @@ fmt:
 
 fmt-check:
 	@gofmt -l $(shell find . -type f -name '*.go' -not -path './*_test.go')
-
-# init-database:
-# 	/bin/bash scripts/postgres-init.sh
 
 clean:
 	@ro -fR bin

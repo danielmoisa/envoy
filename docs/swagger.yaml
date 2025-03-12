@@ -1,15 +1,9 @@
 definitions:
-  github_com_danielmoisa_envoy_src_model.User:
+  src_controller.UserDTO:
     properties:
-      SSOConfig:
-        description: for single sign-on data
-        type: string
       avatar:
         type: string
       createdAt:
-        type: string
-      customization:
-        description: 'for user itself customization config, including: Language, IsSubscribed'
         type: string
       email:
         type: string
@@ -19,35 +13,6 @@ definitions:
         type: string
       passworddigest:
         type: string
-      teamID:
-        type: integer
-      uid:
-        type: string
-      updatedAt:
-        type: string
-    type: object
-  src_controller.UserResponse:
-    properties:
-      SSOConfig:
-        description: for single sign-on data
-        type: string
-      avatar:
-        type: string
-      createdAt:
-        type: string
-      customization:
-        description: 'for user itself customization config, including: Language, IsSubscribed'
-        type: string
-      email:
-        type: string
-      id:
-        type: integer
-      nickname:
-        type: string
-      passworddigest:
-        type: string
-      teamID:
-        type: integer
       uid:
         type: string
       updatedAt:
@@ -82,17 +47,11 @@ paths:
       summary: Get the health status of the server
       tags:
       - health
-  /users/{team_id}:
+  /users:
     get:
       consumes:
       - application/json
-      description: Fetch all users belonging to a specific team
-      parameters:
-      - description: Team ID
-        in: path
-        name: team_id
-        required: true
-        type: integer
+      description: Fetch all users
       produces:
       - application/json
       responses:
@@ -100,13 +59,46 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/src_controller.UserResponse'
+              $ref: '#/definitions/src_controller.UserDTO'
             type: array
         "400":
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: Get all users by team ID
+      summary: Get all users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User details
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/src_controller.UserDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created successfully
+          schema:
+            $ref: '#/definitions/src_controller.UserDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new user
       tags:
       - Users
   /users/{userId}:
@@ -126,7 +118,7 @@ paths:
         "200":
           description: User details
           schema:
-            $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.User'
+            $ref: '#/definitions/src_controller.UserDTO'
         "400":
           description: Bad Request
           schema:

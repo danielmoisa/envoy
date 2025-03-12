@@ -7,8 +7,6 @@ import (
 	"github.com/google/uuid"
 )
 
-const AnonymousUserId = -1
-
 type RawUser struct {
 	ID             string    `json:"id" gorm:"column:id;type:bigint;primary_key;index:users_ukey"`
 	UID            uuid.UUID `json:"uid" gorm:"column:uid;type:uuid;not null;index:users_ukey"`

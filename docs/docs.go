@@ -49,9 +49,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/{team_id}": {
+        "/users": {
             "get": {
-                "description": "Fetch all users belonging to a specific team",
+                "description": "Fetch all users",
                 "consumes": [
                     "application/json"
                 ],
@@ -61,23 +61,14 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get all users by team ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Team ID",
-                        "name": "team_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Get all users",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/src_controller.UserResponse"
+                                "$ref": "#/definitions/src_controller.UserDTO"
                             }
                         }
                     },
@@ -86,6 +77,56 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user",
+                "parameters": [
+                    {
+                        "description": "User details",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/src_controller.UserDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/src_controller.UserDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
@@ -116,7 +157,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User details",
                         "schema": {
-                            "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.User"
+                            "$ref": "#/definitions/src_controller.UserDTO"
                         }
                     },
                     "400": {
@@ -142,21 +183,13 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_danielmoisa_envoy_src_model.User": {
+        "src_controller.UserDTO": {
             "type": "object",
             "properties": {
-                "SSOConfig": {
-                    "description": "for single sign-on data",
-                    "type": "string"
-                },
                 "avatar": {
                     "type": "string"
                 },
                 "createdAt": {
-                    "type": "string"
-                },
-                "customization": {
-                    "description": "for user itself customization config, including: Language, IsSubscribed",
                     "type": "string"
                 },
                 "email": {
@@ -170,49 +203,6 @@ const docTemplate = `{
                 },
                 "passworddigest": {
                     "type": "string"
-                },
-                "teamID": {
-                    "type": "integer"
-                },
-                "uid": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
-        },
-        "src_controller.UserResponse": {
-            "type": "object",
-            "properties": {
-                "SSOConfig": {
-                    "description": "for single sign-on data",
-                    "type": "string"
-                },
-                "avatar": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "customization": {
-                    "description": "for user itself customization config, including: Language, IsSubscribed",
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "nickname": {
-                    "type": "string"
-                },
-                "passworddigest": {
-                    "type": "string"
-                },
-                "teamID": {
-                    "type": "integer"
                 },
                 "uid": {
                     "type": "string"
