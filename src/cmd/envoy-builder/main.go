@@ -9,8 +9,8 @@ import (
 	"github.com/danielmoisa/envoy/src/drive/postgres"
 	"github.com/danielmoisa/envoy/src/drive/redis"
 	"github.com/danielmoisa/envoy/src/drive/s3"
+	"github.com/danielmoisa/envoy/src/repository"
 	"github.com/danielmoisa/envoy/src/router"
-	"github.com/danielmoisa/envoy/src/storage"
 	"github.com/danielmoisa/envoy/src/utils/config"
 	"github.com/danielmoisa/envoy/src/utils/cors"
 	"github.com/danielmoisa/envoy/src/utils/logger"
@@ -36,12 +36,12 @@ func NewServer(config *config.Config, engine *gin.Engine, router *router.Router,
 	}
 }
 
-func initStorage(globalConfig *config.Config, logger *zap.SugaredLogger) *storage.Storage {
+func initStorage(globalConfig *config.Config, logger *zap.SugaredLogger) *repository.Repository {
 	postgresDriver, err := postgres.NewPostgresConnectionByGlobalConfig(globalConfig, logger)
 	if err != nil {
 		logger.Errorw("Error in startup, storage init failed.")
 	}
-	return storage.NewStorage(postgresDriver, logger)
+	return repository.NewRepository(postgresDriver, logger)
 }
 
 func initCache(globalConfig *config.Config, logger *zap.SugaredLogger) *cache.Cache {

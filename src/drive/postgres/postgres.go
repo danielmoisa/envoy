@@ -74,7 +74,7 @@ func NewPostgresConnection(config *PostgresConfig, logger *zap.SugaredLogger) (*
 	}
 
 	// Enable automatic migrations
-	err = db.AutoMigrate(&model.Team{}, &model.User{})
+	err = db.AutoMigrate(&model.User{})
 	if err != nil {
 		return nil, err
 	}

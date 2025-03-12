@@ -20,20 +20,13 @@ type UserResponse *model.User
 // @Success 200 {array} UserResponse
 // @Failure 400
 // @Failure 500
-// @Router /users/{team_id} [get]
+// @Router /users [get]
 func (ctrl *Controller) GetAllUsers(c *gin.Context) {
-	// Fetch teamID param
-	teamID, errInGetTeamID := strconv.Atoi(c.Param("teamId"))
-
-	if errInGetTeamID != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_RESOURCE, "get users by team id error: "+errInGetTeamID.Error())
-		return
-	}
 
 	// Fetch data
-	users, errInRetrieveUsers := ctrl.Storage.UsersStorage.RetrieveByTeamID(teamID)
+	users, errInRetrieveUsers := ctrl.Repository.UsersRepository.RetrieveUsers()
 	if errInRetrieveUsers != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_TEAM, "get users by team id error: "+errInRetrieveUsers.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_TEAM, "get users error: "+errInRetrieveUsers.Error())
 		return
 	}
 
@@ -53,8 +46,7 @@ func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users/{userId} [get]
 func (ctrl *Controller) GetUser(c *gin.Context) {
-	// Fetch params
-	teamID, err := strconv.Atoi(c.Param("teamId"))
+	// Fetch param
 	userID, err := strconv.Atoi(c.Param("userId"))
 
 	if err != nil {
@@ -63,7 +55,7 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 	}
 
 	// Fetch data
-	user, err := ctrl.Storage.UsersStorage.RetrieveByUserID(teamID, userID)
+	user, err := ctrl.Repository.UsersRepository.RetrieveByUserID(userID)
 	if err != nil {
 		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_RESOURCE, "get user by id error: "+err.Error())
 		return
@@ -73,6 +65,7 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// CreateUser
 // @Tags Users
 // @Accept json
 // @Produce json
@@ -85,12 +78,13 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 // @Description Create a new user
 func (ctrl *Controller) CreateUser(c *gin.Context) {
 	user := &model.User{}
+
 	if err := c.ShouldBindJSON(user); err != nil {
 		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_RESOURCE, "create user error: "+err.Error())
 		return
 	}
 
-	user, err := ctrl.Storage.UsersStorage.Create(user.Nickname, user.Email, user.PasswordDigest, user.Avatar)
+	user, err := ctrl.Repository.UsersRepository.Create(user.Nickname, user.Email, user.PasswordDigest, user.Avatar)
 	if err != nil {
 		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_RESOURCE, "create user error: "+err.Error())
 		return

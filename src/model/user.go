@@ -1,8 +1,6 @@
 package model
 
 import (
-	"encoding/json"
-	"strconv"
 	"time"
 
 	"github.com/danielmoisa/envoy/src/utils/idconvertor"
@@ -20,7 +18,6 @@ type RawUser struct {
 	Avatar         string    `json:"avatar" gorm:"column:avatar;type:varchar;size:255;not null"`
 	SSOConfig      string    `json:"SSOConfig" gorm:"column:sso_config;type:jsonb"`        // for single sign-on data
 	Customization  string    `json:"customization" gorm:"column:customization;type:jsonb"` // for user itself customization config, including: Language, IsSubscribed
-	TeamID         int       `json:"teamID" gorm:"column:team_id;type:bigint"`
 	CreatedAt      time.Time `gorm:"column:created_at;type:timestamp"`
 	UpdatedAt      time.Time `gorm:"column:updated_at;type:timestamp"`
 }
@@ -40,21 +37,6 @@ type User struct {
 	UpdatedAt      time.Time `gorm:"column:updated_at;type:timestamp"`
 }
 
-type UserForEditedBy struct {
-	ID       string    `json:"userID"`
-	Nickname string    `json:"nickname"`
-	Email    string    `json:"email"`
-	Avatar   string    `json:"avatar"`
-	EditedAt time.Time `json:"editedAt"`
-}
-
-type UserForModifiedBy struct {
-	ID       string `json:"userID"`
-	Nickname string `json:"nickname"`
-	Email    string `json:"email"`
-	Avatar   string `json:"avatar"`
-}
-
 func NewUser(u *RawUser) *User {
 	return &User{
 		ID:             idconvertor.ConvertStringToInt(u.ID),
@@ -66,57 +48,6 @@ func NewUser(u *RawUser) *User {
 		CreatedAt:      u.CreatedAt,
 		UpdatedAt:      u.UpdatedAt,
 	}
-}
-
-func NewInvalidatedUser() *User {
-	return &User{
-		ID:       AnonymousUserId,
-		Nickname: "invalidated",
-		Email:    "invalidated",
-		Avatar:   "invalidated",
-	}
-}
-
-func NewUserForEditedBy(user *User, editedAt time.Time) *UserForEditedBy {
-	return &UserForEditedBy{
-		ID:       idconvertor.ConvertIntToString(user.ID),
-		Nickname: user.Nickname,
-		Email:    user.Email,
-		Avatar:   user.Avatar,
-		EditedAt: editedAt,
-	}
-}
-
-func NewUserForModifiedBy(user *User) *UserForModifiedBy {
-	return &UserForModifiedBy{
-		ID:       idconvertor.ConvertIntToString(user.ID),
-		Nickname: user.Nickname,
-		Email:    user.Email,
-		Avatar:   user.Avatar,
-	}
-}
-
-func NewUserByDataControlRawData(rawUserString string) (*User, error) {
-	rawUser := RawUser{}
-	errInUnmarshal := json.Unmarshal([]byte(rawUserString), &rawUser)
-	if errInUnmarshal != nil {
-		return nil, errInUnmarshal
-	}
-	return NewUser(&rawUser), nil
-}
-
-func NewUsersByDataControlRawData(rawUsersString string) (map[int]*User, error) {
-	RawUsers := RawUsers{}
-	errInUnmarshal := json.Unmarshal([]byte(rawUsersString), &RawUsers)
-	if errInUnmarshal != nil {
-		return nil, errInUnmarshal
-	}
-	usersRet := make(map[int]*User, len(RawUsers.Users))
-	for userIDString, rawUser := range RawUsers.Users {
-		userIDInt, _ := strconv.Atoi(userIDString)
-		usersRet[userIDInt] = NewUser(rawUser)
-	}
-	return usersRet, nil
 }
 
 func (u *User) ExportIDToString() string {
