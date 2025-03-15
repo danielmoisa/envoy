@@ -49,7 +49,7 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("userId"))
 
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_TEAM, "get users by team id error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_USER, "get user error: "+err.Error())
 		return
 	}
 
@@ -90,4 +90,32 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+// DeleteUser deletes a user by ID
+// @Summary Delete a user by ID
+// @Description Delete a user by their unique user ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param userId path int true "User ID"
+// @Success 200 {object} nil
+// @Router /users/{userId} [delete]
+func (ctrl *Controller) DeleteUser(c *gin.Context) {
+	userID, err := strconv.Atoi(c.Param("userId"))
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_USER, "get user error: "+err.Error())
+		return
+	}
+
+	// Fetch data
+	err = ctrl.Repository.UsersRepository.DeleteByID(userID)
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_DELETE_USER, "delete user by id error: "+err.Error())
+		return
+	}
+
+	// Response
+	c.JSON(http.StatusOK, nil)
+	return
 }

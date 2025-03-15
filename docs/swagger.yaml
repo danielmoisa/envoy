@@ -102,6 +102,24 @@ paths:
       tags:
       - Users
   /users/{userId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by their unique user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete a user by ID
+      tags:
+      - Users
     get:
       consumes:
       - application/json

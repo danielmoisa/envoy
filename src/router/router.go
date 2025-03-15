@@ -36,11 +36,13 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 	healthRouter := routerGroup.Group("/health")
 	usersRouter := routerGroup.Group("/users")
 
-	// Health Routes
+	// Health routes
 	healthRouter.GET("", r.Controller.GetHealth)
 
 	// Users routes
 	usersRouter.GET("/", r.Controller.GetAllUsers)
 	usersRouter.GET("/:userId", r.Controller.GetUser)
 	usersRouter.POST("/", r.Controller.CreateUser)
+	usersRouter.DELETE("/userId", r.Controller.DeleteUser)
+
 }
