@@ -95,7 +95,7 @@ func initServer() (*Server, error) {
 }
 
 func (server *Server) Start() {
-	server.logger.Infow("Starting envoy-builder...")
+	server.logger.Infow("Starting envoy...")
 
 	// Init
 	gin.SetMode(server.config.GetServerMode())
@@ -113,7 +113,7 @@ func (server *Server) Start() {
 	}
 }
 
-// @title Envoy Builder API
+// @title Envoy API
 // @version 1.0
 // @description This is a sample API
 // @termsOfService http://example.com/terms/

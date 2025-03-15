@@ -7,10 +7,10 @@ import (
 )
 
 type Config struct {
-	Addr     string `env:"ENVOY_REDIS_ADDR" envDefault:"localhost"`
-	Port     string `env:"ENVOY_REDIS_PORT" envDefault:"6379"`
-	Password string `env:"ENVOY_REDIS_PASSWORD" envDefault:"envoypass"`
-	Database int    `env:"ENVOY_REDIS_DATABASE" envDefault:"0"`
+	Addr     string `env:"ENVOY_REDIS_ADDR"`
+	Port     string `env:"ENVOY_REDIS_PORT"`
+	Password string `env:"ENVOY_REDIS_PASSWORD"`
+	Database int    `env:"ENVOY_REDIS_DATABASE"`
 }
 
 func NewRedisConnectionByGlobalConfig(config *config.Config, logger *zap.SugaredLogger) (*redis.Client, error) {

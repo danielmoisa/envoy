@@ -2,8 +2,9 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/danielmoisa/envoy/src/model"
 	"time"
+
+	"github.com/danielmoisa/envoy/src/model"
 
 	"github.com/danielmoisa/envoy/src/utils/config"
 	"go.uber.org/zap"
@@ -14,11 +15,11 @@ import (
 const RETRY_TIMES = 6
 
 type PostgresConfig struct {
-	Addr     string `env:"ENVOY_PG_ADDR" envDefault:"localhost"`
-	Port     string `env:"ENVOY_PG_PORT" envDefault:"5433"`
-	User     string `env:"ENVOY_PG_USER" envDefault:"envoy_cloud"`
-	Password string `env:"ENVOY_PG_PASSWORD" envDefault:"envoypass"`
-	Database string `env:"ENVOY_PG_DATABASE" envDefault:"envoy_cloud"`
+	Addr     string `env:"ENVOY_PG_ADDR"`
+	Port     string `env:"ENVOY_PG_PORT"`
+	User     string `env:"ENVOY_PG_USER"`
+	Password string `env:"ENVOY_PG_PASSWORD"`
+	Database string `env:"ENVOY_PG_DATABASE"`
 }
 
 func NewPostgresConnectionByGlobalConfig(config *config.Config, logger *zap.SugaredLogger) (*gorm.DB, error) {
@@ -66,7 +67,7 @@ func NewPostgresConnection(config *PostgresConfig, logger *zap.SugaredLogger) (*
 		return nil, err
 	}
 
-	// check db connection
+	// Check db connection
 	err = sqlDB.Ping()
 	if err != nil {
 		logger.Errorw("error in connecting db ", "db", config, "err", err)
@@ -74,7 +75,7 @@ func NewPostgresConnection(config *PostgresConfig, logger *zap.SugaredLogger) (*
 	}
 
 	// Enable automatic migrations
-	err = db.AutoMigrate(&model.User{})
+	err = db.AutoMigrate(&model.User{}, &model.Candidate{}, &model.Company{}, &model.Job{}, &model.Application{})
 	if err != nil {
 		return nil, err
 	}
