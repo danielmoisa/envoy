@@ -48,6 +48,19 @@ func (repository *UsersRepository) Create(username, email, password, avatar stri
 	return user, nil
 }
 
+func (repository *UsersRepository) UpdateByID(userID int, username, email, password, avatar string) (*model.User, error) {
+	user := &model.User{
+		Username: username,
+		Email:    email,
+		Password: password,
+		Avatar:   avatar,
+	}
+	if err := repository.db.Where("id = ?", userID).Updates(user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 func (repository *UsersRepository) DeleteByID(userID int) error {
 	if err := repository.db.Where("id = ?", userID).Delete(&model.User{}).Error; err != nil {
 		return err

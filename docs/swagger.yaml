@@ -224,4 +224,42 @@ paths:
       summary: Get a user by ID
       tags:
       - Users
+    put:
+      consumes:
+      - application/json
+      description: Update a user by their unique user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      - description: User details
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/src_controller.UserDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated successfully
+          schema:
+            $ref: '#/definitions/src_controller.UserDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a user by ID
+      tags:
+      - Users
 swagger: "2.0"

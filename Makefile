@@ -11,7 +11,7 @@ start:
 	go run src/cmd/envoy/main.go
 
 swagger:
-	swag init --pd -g ./src/cmd/envoy/main.go
+	swag init --pd -g src/cmd/envoy/main.go
 	
 test:
 	PROJECT_PWD=$(shell pwd) go test -race ./...

@@ -43,6 +43,6 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 	usersRouter.GET("/", r.Controller.GetAllUsers)
 	usersRouter.GET("/:userId", r.Controller.GetUser)
 	usersRouter.POST("/", r.Controller.CreateUser)
+	usersRouter.PUT("/:userId", r.Controller.UpdateUser)
 	usersRouter.DELETE("/userId", r.Controller.DeleteUser)
-
 }

@@ -94,6 +94,43 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// UpdateUser updates a user by ID
+// @Summary Update a user by ID
+// @Description Update a user by their unique user ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param userId path int true "User ID"
+// @Param User body UserDTO true "User details"
+// @Success 200 {object} UserDTO "User updated successfully"
+// @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 500 {object} map[string]string "Internal Server Error"
+// @Router /users/{userId} [put]
+func (ctrl *Controller) UpdateUser(c *gin.Context) {
+	userID, err := strconv.Atoi(c.Param("userId"))
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_USER, "get user error: "+err.Error())
+		return
+	}
+
+	user := &model.User{}
+
+	if err := c.ShouldBindJSON(user); err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "create user error: "+err.Error())
+		return
+	}
+
+	hashedPassword := user.HashPassword(user.Password)
+
+	user, err = ctrl.Repository.UsersRepository.UpdateByID(userID, user.Username, user.Email, hashedPassword, user.Avatar)
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_UPDATE_USER, "update user by id error: "+err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
 // DeleteUser deletes a user by ID
 // @Summary Delete a user by ID
 // @Description Delete a user by their unique user ID
