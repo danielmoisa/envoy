@@ -1,53 +1,34 @@
 package model
 
 import (
-	"time"
-
-	"github.com/danielmoisa/envoy/src/utils/idconvertor"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
+	"log"
+	"time"
 )
 
-type RawUser struct {
-	ID             string    `json:"id" gorm:"column:id;type:bigint;primary_key;index:users_ukey"`
-	UID            uuid.UUID `json:"uid" gorm:"column:uid;type:uuid;not null;index:users_ukey"`
-	Nickname       string    `json:"nickname" gorm:"column:nickname;type:varchar;size:15"`
-	PasswordDigest string    `json:"passworddigest" gorm:"column:password_digest;type:varchar;size:60;not null"`
-	Email          string    `json:"email" gorm:"column:email;type:varchar;size:255;not null"`
-	Avatar         string    `json:"avatar" gorm:"column:avatar;type:varchar;size:255;not null"`
-	SSOConfig      string    `json:"SSOConfig" gorm:"column:sso_config;type:jsonb"`        // for single sign-on data
-	Customization  string    `json:"customization" gorm:"column:customization;type:jsonb"` // for user itself customization config, including: Language, IsSubscribed
-	CreatedAt      time.Time `gorm:"column:created_at;type:timestamp"`
-	UpdatedAt      time.Time `gorm:"column:updated_at;type:timestamp"`
-}
-
-type RawUsers struct {
-	Users map[string]*RawUser `json:"users"`
-}
-
 type User struct {
-	ID             int       `json:"id" gorm:"column:id;type:bigint;primary_key;index:users_ukey"`
-	UID            uuid.UUID `json:"uid" gorm:"column:uid;type:uuid;not null;index:users_ukey"`
-	Nickname       string    `json:"nickname" gorm:"column:nickname;type:varchar;size:15"`
-	PasswordDigest string    `json:"passworddigest" gorm:"column:password_digest;type:varchar;size:60;not null"`
-	Email          string    `json:"email" gorm:"column:email;type:varchar;size:255;not null"`
-	Avatar         string    `json:"avatar" gorm:"column:avatar;type:varchar;size:255;not null"`
-	CreatedAt      time.Time `gorm:"column:created_at;type:timestamp"`
-	UpdatedAt      time.Time `gorm:"column:updated_at;type:timestamp"`
+	ID        uuid.UUID `json:"id" gorm:"column:id;primaryKey;type:uuid;default:gen_random_uuid()"`
+	Username  string    `json:"username" gorm:"column:username;type:varchar;size:15;uniqueIndex"`
+	Password  string    `json:"-" gorm:"column:password;type:varchar;size:60;not null;default:null"`
+	Email     string    `json:"email" gorm:"column:email;type:varchar;size:255;not null;default:null;uniqueIndex"`
+	Avatar    string    `json:"avatar" gorm:"column:avatar;type:varchar;size:255"`
+	CreatedAt time.Time `gorm:"column:created_at;type:timestamp"`
+	UpdatedAt time.Time `gorm:"column:updated_at;type:timestamp"`
 }
 
-func NewUser(u *RawUser) *User {
-	return &User{
-		ID:             idconvertor.ConvertStringToInt(u.ID),
-		UID:            u.UID,
-		Nickname:       u.Nickname,
-		PasswordDigest: u.PasswordDigest,
-		Email:          u.Email,
-		Avatar:         u.Avatar,
-		CreatedAt:      u.CreatedAt,
-		UpdatedAt:      u.UpdatedAt,
+// HashPassword hashes a plain text password and returns it as a string
+func (u *User) HashPassword(plainPassword string) string {
+	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(plainPassword), bcrypt.DefaultCost)
+	if err != nil {
+		log.Printf("Error hashing password: %v", err)
+		return ""
 	}
+	return string(hashedBytes)
 }
 
-func (u *User) ExportIDToString() string {
-	return idconvertor.ConvertIntToString(u.ID)
+// CheckPassword verifies if the provided password matches the stored hash
+func (u *User) CheckPassword(plainPassword string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plainPassword))
+	return err == nil
 }

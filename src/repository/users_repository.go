@@ -35,12 +35,12 @@ func (repository *UsersRepository) RetrieveByUserID(userID int) (*model.User, er
 	return user, nil
 }
 
-func (repository *UsersRepository) Create(name, email, password, avatar string) (*model.User, error) {
+func (repository *UsersRepository) Create(username, email, password, avatar string) (*model.User, error) {
 	user := &model.User{
-		Nickname:       name,
-		Email:          email,
-		PasswordDigest: password,
-		Avatar:         avatar,
+		Username: username,
+		Email:    email,
+		Password: password,
+		Avatar:   avatar,
 	}
 	if err := repository.db.Create(user).Error; err != nil {
 		return user, err

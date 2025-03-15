@@ -79,13 +79,15 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 	user := &model.User{}
 
 	if err := c.ShouldBindJSON(user); err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_RESOURCE, "create user error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "create user error: "+err.Error())
 		return
 	}
 
-	user, err := ctrl.Repository.UsersRepository.Create(user.Nickname, user.Email, user.PasswordDigest, user.Avatar)
+	hashedPassword := user.HashPassword(user.Password)
+
+	user, err := ctrl.Repository.UsersRepository.Create(user.Username, user.Email, hashedPassword, user.Avatar)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_RESOURCE, "create user error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "create user error: "+err.Error())
 		return
 	}
 
