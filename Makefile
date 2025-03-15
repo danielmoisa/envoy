@@ -5,13 +5,13 @@ all: build
 build: build-http-server
 
 build-http-server:
-	go build -o bin/envoy-builder src/cmd/envoy-builder/main.go
+	go build -o bin/envoy src/cmd/envoy/main.go
 
 start:
-	go run src/cmd/envoy-builder/main.go
+	go run src/cmd/envoy/main.go
 
 swagger:
-	swag init --pd -g ./src/cmd/envoy-builder/main.go
+	swag init --pd -g ./src/cmd/envoy/main.go
 	
 test:
 	PROJECT_PWD=$(shell pwd) go test -race ./...

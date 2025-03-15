@@ -1,21 +1,93 @@
 definitions:
+  github_com_danielmoisa_envoy_src_model.Candidate:
+    properties:
+      createdAt:
+        type: string
+      experience:
+        description: Years of experience
+        type: integer
+      id:
+        type: string
+      is_available:
+        type: boolean
+      skills:
+        items:
+          $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Skill'
+        type: array
+      summary:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+      user_id:
+        type: string
+    type: object
+  github_com_danielmoisa_envoy_src_model.Company:
+    properties:
+      company_logo:
+        type: string
+      company_name:
+        type: string
+      company_size:
+        type: string
+      company_website:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      industry:
+        type: string
+      updatedAt:
+        type: string
+      user_id:
+        type: string
+    type: object
+  github_com_danielmoisa_envoy_src_model.Skill:
+    properties:
+      category:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  github_com_danielmoisa_envoy_src_model.UserRole:
+    enum:
+    - candidate
+    - company
+    - admin
+    type: string
+    x-enum-varnames:
+    - RoleCandidate
+    - RoleCompany
+    - RoleAdmin
   src_controller.UserDTO:
     properties:
       avatar:
         type: string
+      candidate:
+        allOf:
+        - $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+        description: Associations
+      company:
+        $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Company'
       createdAt:
         type: string
       email:
         type: string
       id:
-        type: integer
-      nickname:
         type: string
-      passworddigest:
-        type: string
-      uid:
-        type: string
+      is_active:
+        type: boolean
+      role:
+        $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.UserRole'
       updatedAt:
+        type: string
+      username:
         type: string
     type: object
 info:
@@ -25,7 +97,7 @@ info:
     url: http://example.com/support
   description: This is a sample API
   termsOfService: http://example.com/terms/
-  title: Envoy Builder API
+  title: Envoy API
   version: "1.0"
 paths:
   /health:

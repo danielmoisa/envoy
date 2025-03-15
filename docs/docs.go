@@ -210,11 +210,120 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "github_com_danielmoisa_envoy_src_model.Candidate": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "experience": {
+                    "description": "Years of experience",
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_available": {
+                    "type": "boolean"
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.Skill"
+                    }
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_danielmoisa_envoy_src_model.Company": {
+            "type": "object",
+            "properties": {
+                "company_logo": {
+                    "type": "string"
+                },
+                "company_name": {
+                    "type": "string"
+                },
+                "company_size": {
+                    "type": "string"
+                },
+                "company_website": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "industry": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_danielmoisa_envoy_src_model.Skill": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_danielmoisa_envoy_src_model.UserRole": {
+            "type": "string",
+            "enum": [
+                "candidate",
+                "company",
+                "admin"
+            ],
+            "x-enum-varnames": [
+                "RoleCandidate",
+                "RoleCompany",
+                "RoleAdmin"
+            ]
+        },
         "src_controller.UserDTO": {
             "type": "object",
             "properties": {
                 "avatar": {
                     "type": "string"
+                },
+                "candidate": {
+                    "description": "Associations",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.Candidate"
+                        }
+                    ]
+                },
+                "company": {
+                    "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.Company"
                 },
                 "createdAt": {
                     "type": "string"
@@ -223,18 +332,18 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
-                },
-                "nickname": {
                     "type": "string"
                 },
-                "passworddigest": {
-                    "type": "string"
+                "is_active": {
+                    "type": "boolean"
                 },
-                "uid": {
-                    "type": "string"
+                "role": {
+                    "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.UserRole"
                 },
                 "updatedAt": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
@@ -248,7 +357,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Envoy Builder API",
+	Title:            "Envoy API",
 	Description:      "This is a sample API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
