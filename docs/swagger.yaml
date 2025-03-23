@@ -66,7 +66,7 @@ definitions:
         description: Associations
       company:
         $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Company'
-      createdAt:
+      created_at:
         type: string
       email:
         type: string
@@ -76,7 +76,7 @@ definitions:
         type: boolean
       role:
         $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.UserRole'
-      updatedAt:
+      update_at:
         type: string
       username:
         type: string
@@ -118,7 +118,7 @@ definitions:
         description: Associations
       company:
         $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Company'
-      createdAt:
+      created_at:
         type: string
       email:
         type: string
@@ -128,7 +128,7 @@ definitions:
         type: boolean
       role:
         $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.UserRole'
-      updatedAt:
+      update_at:
         type: string
       username:
         type: string

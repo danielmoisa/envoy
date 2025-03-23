@@ -556,7 +556,7 @@ const docTemplate = `{
                 "company": {
                     "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.Company"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "email": {
@@ -571,7 +571,7 @@ const docTemplate = `{
                 "role": {
                     "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.UserRole"
                 },
-                "updatedAt": {
+                "update_at": {
                     "type": "string"
                 },
                 "username": {
@@ -635,7 +635,7 @@ const docTemplate = `{
                 "company": {
                     "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.Company"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "email": {
@@ -650,7 +650,7 @@ const docTemplate = `{
                 "role": {
                     "$ref": "#/definitions/github_com_danielmoisa_envoy_src_model.UserRole"
                 },
-                "updatedAt": {
+                "update_at": {
                     "type": "string"
                 },
                 "username": {
