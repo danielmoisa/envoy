@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   github_com_danielmoisa_envoy_src_model.Candidate:
     properties:
@@ -55,6 +56,31 @@ definitions:
       name:
         type: string
     type: object
+  github_com_danielmoisa_envoy_src_model.User:
+    properties:
+      avatar:
+        type: string
+      candidate:
+        allOf:
+        - $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+        description: Associations
+      company:
+        $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Company'
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      role:
+        $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.UserRole'
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
   github_com_danielmoisa_envoy_src_model.UserRole:
     enum:
     - candidate
@@ -65,6 +91,23 @@ definitions:
     - RoleCandidate
     - RoleCompany
     - RoleAdmin
+  github_com_danielmoisa_envoy_src_request.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  github_com_danielmoisa_envoy_src_response.LoginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.User'
+    type: object
   src_controller.UserDTO:
     properties:
       avatar:
@@ -100,6 +143,63 @@ info:
   title: Envoy API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_danielmoisa_envoy_src_request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_danielmoisa_envoy_src_response.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout user (client-side token removal)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully logged out
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User logout
+      tags:
+      - Auth
   /health:
     get:
       consumes:
@@ -135,8 +235,24 @@ paths:
             type: array
         "400":
           description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
       summary: Get all users
       tags:
       - Users
@@ -155,11 +271,17 @@ paths:
       - application/json
       responses:
         "201":
-          description: User created successfully
+          description: Created
           schema:
             $ref: '#/definitions/src_controller.UserDTO'
         "400":
           description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
           schema:
             additionalProperties:
               type: string
@@ -170,6 +292,8 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Create a new user
       tags:
       - Users
@@ -189,6 +313,26 @@ paths:
       responses:
         "200":
           description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
       summary: Delete a user by ID
       tags:
       - Users
@@ -206,11 +350,17 @@ paths:
       - application/json
       responses:
         "200":
-          description: User details
+          description: OK
           schema:
             $ref: '#/definitions/src_controller.UserDTO'
         "400":
           description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
           schema:
             additionalProperties:
               type: string
@@ -221,6 +371,8 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Get a user by ID
       tags:
       - Users
@@ -244,11 +396,17 @@ paths:
       - application/json
       responses:
         "200":
-          description: User updated successfully
+          description: OK
           schema:
             $ref: '#/definitions/src_controller.UserDTO'
         "400":
           description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
           schema:
             additionalProperties:
               type: string
@@ -259,7 +417,15 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Update a user by ID
       tags:
       - Users
+securityDefinitions:
+  Bearer:
+    description: 'Enter the token with the `Bearer: ` prefix, e.g. "Bearer abcde12345".'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

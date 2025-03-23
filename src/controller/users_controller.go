@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/danielmoisa/envoy/src/model"
+	"github.com/danielmoisa/envoy/src/request"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,11 +15,13 @@ type UserDTO *model.User
 // @Summary Get all users
 // @Description Fetch all users
 // @Tags Users
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
+// @Security Bearer
 // @Success 200 {array} UserDTO
-// @Failure 400
-// @Failure 500
+// @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users [get]
 func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 
@@ -39,9 +42,11 @@ func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param userId path int true "User ID"
-// @Success 200 {object} UserDTO "User details"
+// @Success 200 {object} UserDTO
 // @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 401 {object} map[string]string "Unauthorized"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users/{userId} [get]
 func (ctrl *Controller) GetUser(c *gin.Context) {
@@ -64,28 +69,55 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// CreateUser
+// CreateUser creates a new user
+// @Summary Create a new user
+// @Description Create a new user
 // @Tags Users
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param User body UserDTO true "User details"
-// @Success 201 {object} UserDTO "User created successfully"
+// @Success 201 {object} UserDTO
 // @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 401 {object} map[string]string "Unauthorized"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users [post]
-// @Summary Create a new user
-// @Description Create a new user
 func (ctrl *Controller) CreateUser(c *gin.Context) {
-	user := &model.User{}
-
-	if err := c.ShouldBindJSON(user); err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "create user error: "+err.Error())
+	var req request.CreateUserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "invalid user data: "+err.Error())
 		return
 	}
 
-	hashedPassword := user.HashPassword(user.Password)
+	// Validate password
+	if req.Password == "" {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "password is required")
+		return
+	}
 
-	user, err := ctrl.Repository.UsersRepository.Create(user.Username, user.Email, hashedPassword, user.Avatar)
+	// Create user with validated data
+	user := &model.User{
+		Username: req.Username,
+		Email:    req.Email,
+		Avatar:   req.Avatar,
+		Role:     req.Role,
+	}
+
+	// Hash the password
+	hashedPassword, err := user.HashPassword(req.Password)
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "password hashing failed: "+err.Error())
+		return
+	}
+
+	user.Password = hashedPassword
+
+	user, err = ctrl.Repository.UsersRepository.Create(
+		user.Username,
+		user.Email,
+		user.Password,
+		user.Avatar,
+	)
 	if err != nil {
 		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "create user error: "+err.Error())
 		return
@@ -100,10 +132,12 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param userId path int true "User ID"
 // @Param User body UserDTO true "User details"
-// @Success 200 {object} UserDTO "User updated successfully"
+// @Success 200 {object} UserDTO
 // @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 401 {object} map[string]string "Unauthorized"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users/{userId} [put]
 func (ctrl *Controller) UpdateUser(c *gin.Context) {
@@ -120,7 +154,11 @@ func (ctrl *Controller) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	hashedPassword := user.HashPassword(user.Password)
+	hashedPassword, err := user.HashPassword(user.Password)
+	if err != nil {
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_UPDATE_USER, "password hashing failed: "+err.Error())
+		return
+	}
 
 	user, err = ctrl.Repository.UsersRepository.UpdateByID(userID, user.Username, user.Email, hashedPassword, user.Avatar)
 	if err != nil {
@@ -137,8 +175,12 @@ func (ctrl *Controller) UpdateUser(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param userId path int true "User ID"
 // @Success 200 {object} nil
+// @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users/{userId} [delete]
 func (ctrl *Controller) DeleteUser(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("userId"))
@@ -156,5 +198,4 @@ func (ctrl *Controller) DeleteUser(c *gin.Context) {
 
 	// Response
 	c.JSON(http.StatusOK, nil)
-	return
 }

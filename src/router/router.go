@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/danielmoisa/envoy/src/controller"
+	"github.com/danielmoisa/envoy/src/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,30 +20,37 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 	// Config
 	engine.UseRawPath = true
 
-	// Init routers
+	// Init base router group
 	routerGroup := engine.Group("/api/v1")
 
-	// builderRouter := routerGroup.Group("/teams/:teamID/builder")
-	// appRouter := routerGroup.Group("/teams/:teamID/apps")
-	// appsRouter := routerGroup.Group("/apps")
-	// publicAppRouter := routerGroup.Group("/teams/byIdentifier/:teamIdentifier/publicApps")
-	// resourceRouter := routerGroup.Group("/teams/:teamID/resources")
-	// actionRouter := routerGroup.Group("/teams/:teamID/apps/:appID/actions")
-	// publicActionRouter := routerGroup.Group("/teams/byIdentifier/:teamIdentifier/apps/:appID/publicActions")
-	// internalActionRouter := routerGroup.Group("/teams/:teamID/apps/:appID/internalActions")
-	// roomRouter := routerGroup.Group("/teams/:teamID/room")
-	// oauth2Router := routerGroup.Group("/oauth2")
-	// flowActionRouter := routerGroup.Group("/teams/:teamID/workflow/:workflowID/flowActions")
+	// Public routes
 	healthRouter := routerGroup.Group("/health")
-	usersRouter := routerGroup.Group("/users")
+	authRouter := routerGroup.Group("/auth")
 
-	// Health routes
+	// Health routes (public)
 	healthRouter.GET("", r.Controller.GetHealth)
 
-	// Users routes
-	usersRouter.GET("/", r.Controller.GetAllUsers)
-	usersRouter.GET("/:userId", r.Controller.GetUser)
-	usersRouter.POST("/", r.Controller.CreateUser)
-	usersRouter.PUT("/:userId", r.Controller.UpdateUser)
-	usersRouter.DELETE("/userId", r.Controller.DeleteUser)
+	// Auth routes (public)
+	authRouter.POST("/login", r.Controller.Login)
+	authRouter.POST("/logout", r.Controller.Logout)
+
+	// Protected routes
+	protected := routerGroup.Group("")
+	protected.Use(middleware.AuthMiddleware())
+	{
+		// Users routes (protected)
+		usersRouter := protected.Group("/users")
+		{
+			usersRouter.GET("/", r.Controller.GetAllUsers)
+			usersRouter.GET("/:userId", r.Controller.GetUser)
+			usersRouter.POST("/", r.Controller.CreateUser)
+			usersRouter.PUT("/:userId", r.Controller.UpdateUser)
+			usersRouter.DELETE("/:userId", r.Controller.DeleteUser)
+		}
+
+		// Add other protected routes here
+		// Example:
+		// companiesRouter := protected.Group("/companies")
+		// jobsRouter := protected.Group("/jobs")
+	}
 }

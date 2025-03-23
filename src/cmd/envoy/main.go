@@ -117,9 +117,17 @@ func (server *Server) Start() {
 // @version 1.0
 // @description This is a sample API
 // @termsOfService http://example.com/terms/
+
 // @contact.name API Support
 // @contact.url http://example.com/support
 // @contact.email support@example.com
+
+// @securityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
+// @description Enter the token with the `Bearer: ` prefix, e.g. "Bearer abcde12345".
+
+// @BasePath /api/v1
 func main() {
 	server, err := initServer()
 
