@@ -48,9 +48,15 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 			usersRouter.DELETE("/:userId", r.Controller.DeleteUser)
 		}
 
-		// Add other protected routes here
-		// Example:
-		// companiesRouter := protected.Group("/companies")
-		// jobsRouter := protected.Group("/jobs")
+		// Companies routes (protected)
+		companiesRouter := protected.Group("/companies")
+		{
+			companiesRouter.GET("", r.Controller.GetAllCompanies)
+			companiesRouter.GET("/:companyId", r.Controller.GetCompany)
+			companiesRouter.POST("", r.Controller.CreateCompany)
+			companiesRouter.PUT("/:companyId", r.Controller.UpdateCompany)
+			companiesRouter.DELETE("/:companyId", r.Controller.DeleteCompany)
+		}
+
 	}
 }

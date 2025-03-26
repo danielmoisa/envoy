@@ -6,11 +6,13 @@ import (
 )
 
 type Repository struct {
-	UsersRepository *UsersRepository
+	UsersRepository     *UsersRepository
+	CompaniesRepository *CompaniesRepository
 }
 
 func NewRepository(postgresDriver *gorm.DB, logger *zap.SugaredLogger) *Repository {
 	return &Repository{
-		UsersRepository: NewUsersRepository(logger, postgresDriver),
+		UsersRepository:     NewUsersRepository(logger, postgresDriver),
+		CompaniesRepository: NewCompaniesRepository(logger, postgresDriver),
 	}
 }
