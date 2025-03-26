@@ -36,14 +36,12 @@ func (ctrl *Controller) Login(c *gin.Context) {
 		return
 	}
 
-	// Find user
 	user, err := ctrl.Repository.UsersRepository.FindByEmail(loginReq.Email)
 	if err != nil {
 		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_CREDENTIALS, "invalid credentials")
 		return
 	}
 
-	// Check password
 	if !user.CheckPassword(loginReq.Password) {
 		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_CREDENTIALS, "invalid credentials")
 		return
