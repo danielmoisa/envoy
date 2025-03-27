@@ -79,8 +79,6 @@ func (ctrl *Controller) CreateCompany(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, createdCompany)
-
-	c.JSON(http.StatusCreated, company)
 }
 
 // UpdateCompany updates an existing company
