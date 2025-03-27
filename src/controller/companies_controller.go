@@ -20,7 +20,7 @@ import (
 func (ctrl *Controller) GetAllCompanies(c *gin.Context) {
 	companies, err := ctrl.Repository.CompaniesRepository.GetAll()
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, "COMPANY_FETCH_ERROR", err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_COMPANY_GET_FAILED, err.Error())
 		return
 	}
 
@@ -41,13 +41,13 @@ func (ctrl *Controller) GetAllCompanies(c *gin.Context) {
 func (ctrl *Controller) GetCompany(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("companyId"))
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, "INVALID_ID", "invalid company ID format")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, "Invalid company ID format: "+err.Error())
 		return
 	}
 
 	company, err := ctrl.Repository.CompaniesRepository.GetByID(id)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, "COMPANY_NOT_FOUND", "company not found")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_COMPANY_NOT_FOUND, "Company not found: "+err.Error())
 		return
 	}
 
@@ -68,13 +68,13 @@ func (ctrl *Controller) GetCompany(c *gin.Context) {
 func (ctrl *Controller) CreateCompany(c *gin.Context) {
 	var company model.Company
 	if err := c.ShouldBindJSON(&company); err != nil {
-		ctrl.FeedbackBadRequest(c, "INVALID_INPUT", err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, err.Error())
 		return
 	}
 
 	createdCompany, err := ctrl.Repository.CompaniesRepository.Create(&company)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, "COMPANY_CREATE_ERROR", err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_COMPANY_CREATE_FAILED, err.Error())
 		return
 	}
 
@@ -97,20 +97,20 @@ func (ctrl *Controller) CreateCompany(c *gin.Context) {
 func (ctrl *Controller) UpdateCompany(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("companyId"))
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, "INVALID_ID", "invalid company ID format")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, "Invalid company ID format: "+err.Error())
 		return
 	}
 
 	var company model.Company
 	if err := c.ShouldBindJSON(&company); err != nil {
-		ctrl.FeedbackBadRequest(c, "INVALID_INPUT", err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, err.Error())
 		return
 	}
 
 	company.ID = id
 	updateCompany, err := ctrl.Repository.CompaniesRepository.Update(&company)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, "COMPANY_UPDATE_ERROR", err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_COMPANY_UPDATE_FAILED, err.Error())
 		return
 	}
 
@@ -131,12 +131,12 @@ func (ctrl *Controller) UpdateCompany(c *gin.Context) {
 func (ctrl *Controller) DeleteCompany(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("companyId"))
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, "INVALID_ID", "invalid company ID format")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, "Invalid company ID format: "+err.Error())
 		return
 	}
 
 	if err := ctrl.Repository.CompaniesRepository.Delete(id); err != nil {
-		ctrl.FeedbackBadRequest(c, "COMPANY_DELETE_ERROR", err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_COMPANY_DELETE_FAILED, err.Error())
 		return
 	}
 

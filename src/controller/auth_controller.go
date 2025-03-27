@@ -11,12 +11,6 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-const (
-	ERROR_FLAG_INVALID_LOGIN       = "INVALID_LOGIN_REQUEST"
-	ERROR_FLAG_INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
-	ERROR_FLAG_TOKEN_GENERATION    = "TOKEN_GENERATION_ERROR"
-)
-
 // Login authenticates a user and returns a JWT token
 // @Summary User login
 // @Description Authenticate user and return JWT token

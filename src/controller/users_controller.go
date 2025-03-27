@@ -24,15 +24,12 @@ type UserDTO *model.User
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users [get]
 func (ctrl *Controller) GetAllUsers(c *gin.Context) {
-
-	// Fetch data
 	users, errInRetrieveUsers := ctrl.Repository.UsersRepository.RetrieveUsers()
 	if errInRetrieveUsers != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_TEAM, "get users error: "+errInRetrieveUsers.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_GET_FAILED, "Get users error: "+errInRetrieveUsers.Error())
 		return
 	}
 
-	// Response
 	c.JSON(http.StatusOK, users)
 }
 
@@ -50,22 +47,19 @@ func (ctrl *Controller) GetAllUsers(c *gin.Context) {
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /users/{userId} [get]
 func (ctrl *Controller) GetUser(c *gin.Context) {
-	// Fetch param
 	userID, err := strconv.Atoi(c.Param("userId"))
 
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_USER, "get user error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, "Get user error: "+err.Error())
 		return
 	}
 
-	// Fetch data
 	user, err := ctrl.Repository.UsersRepository.RetrieveByUserID(userID)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_RESOURCE, "get user by id error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_GET_FAILED, "get user by id error: "+err.Error())
 		return
 	}
 
-	// Response
 	c.JSON(http.StatusOK, user)
 }
 
@@ -85,17 +79,15 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 func (ctrl *Controller) CreateUser(c *gin.Context) {
 	var req request.CreateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "invalid user data: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, "Invalid user data: "+err.Error())
 		return
 	}
 
-	// Validate password
 	if req.Password == "" {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "password is required")
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_CREATE_FAILED, "Password is required")
 		return
 	}
 
-	// Create user with validated data
 	user := &model.User{
 		Username: req.Username,
 		Email:    req.Email,
@@ -103,10 +95,9 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 		Role:     req.Role,
 	}
 
-	// Hash the password
 	hashedPassword, err := user.HashPassword(req.Password)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "password hashing failed: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_PASSWORD_INVALID, "Password hashing failed: "+err.Error())
 		return
 	}
 
@@ -119,7 +110,7 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 		user.Avatar,
 	)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "create user error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_CREATE_FAILED, "Create user error: "+err.Error())
 		return
 	}
 
@@ -143,26 +134,26 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 func (ctrl *Controller) UpdateUser(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("userId"))
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_USER, "get user error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, "Get user error: "+err.Error())
 		return
 	}
 
 	user := &model.User{}
 
 	if err := c.ShouldBindJSON(user); err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_CREATE_USER, "create user error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_UPDATE_FAILED, "Create user error: "+err.Error())
 		return
 	}
 
 	hashedPassword, err := user.HashPassword(user.Password)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_UPDATE_USER, "password hashing failed: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_PASSWORD_INVALID, "Password hashing failed: "+err.Error())
 		return
 	}
 
 	user, err = ctrl.Repository.UsersRepository.UpdateByID(userID, user.Username, user.Email, hashedPassword, user.Avatar)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_UPDATE_USER, "update user by id error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_UPDATE_FAILED, "Update user by id error: "+err.Error())
 		return
 	}
 
@@ -185,14 +176,14 @@ func (ctrl *Controller) UpdateUser(c *gin.Context) {
 func (ctrl *Controller) DeleteUser(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("userId"))
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_GET_USER, "get user error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_INVALID_INPUT, "Get user error: "+err.Error())
 		return
 	}
 
 	// Fetch data
 	err = ctrl.Repository.UsersRepository.DeleteByID(userID)
 	if err != nil {
-		ctrl.FeedbackBadRequest(c, ERROR_FLAG_CAN_NOT_DELETE_USER, "delete user by id error: "+err.Error())
+		ctrl.FeedbackBadRequest(c, ERROR_FLAG_USER_DELETE_FAILED, "Delete user by id error: "+err.Error())
 		return
 	}
 
