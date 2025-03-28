@@ -14,7 +14,10 @@ import (
 // @Tags Companies
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Success 200 {array} model.Company
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 403 {object} map[string]string "Forbidden"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /companies [get]
 func (ctrl *Controller) GetAllCompanies(c *gin.Context) {
@@ -33,8 +36,11 @@ func (ctrl *Controller) GetAllCompanies(c *gin.Context) {
 // @Tags Companies
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param companyId path string true "Company ID"
 // @Success 200 {object} model.Company
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 403 {object} map[string]string "Forbidden"
 // @Failure 404 {object} map[string]string "Not Found"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /companies/{companyId} [get]
@@ -60,9 +66,12 @@ func (ctrl *Controller) GetCompany(c *gin.Context) {
 // @Tags Companies
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param company body model.Company true "Company Data"
 // @Success 201 {object} model.Company
 // @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 403 {object} map[string]string "Forbidden"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /companies [post]
 func (ctrl *Controller) CreateCompany(c *gin.Context) {
@@ -87,10 +96,13 @@ func (ctrl *Controller) CreateCompany(c *gin.Context) {
 // @Tags Companies
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param companyId path string true "Company ID"
 // @Param company body model.Company true "Company Data"
 // @Success 200 {object} model.Company
 // @Failure 400 {object} map[string]string "Bad Request"
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 403 {object} map[string]string "Forbidden"
 // @Failure 404 {object} map[string]string "Not Found"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /companies/{companyId} [put]
@@ -123,8 +135,11 @@ func (ctrl *Controller) UpdateCompany(c *gin.Context) {
 // @Tags Companies
 // @Accept json
 // @Produce json
+// @Security Bearer
 // @Param companyId path string true "Company ID"
 // @Success 204 "No Content"
+// @Failure 401 {object} map[string]string "Unauthorized"
+// @Failure 403 {object} map[string]string "Forbidden"
 // @Failure 404 {object} map[string]string "Not Found"
 // @Failure 500 {object} map[string]string "Internal Server Error"
 // @Router /companies/{companyId} [delete]

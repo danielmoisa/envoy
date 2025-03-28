@@ -9,7 +9,7 @@ import (
 // GetHealth godoc
 // @Summary Get the health status of the server
 // @Description Returns the server health status as a simple "OK" message.
-// @Tags health
+// @Tags Health
 // @Accept json
 // @Produce json
 // @Success 200 {string} string "OK"

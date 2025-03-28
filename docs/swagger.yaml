@@ -214,12 +214,26 @@ paths:
             items:
               $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Company'
             type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
           schema:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Get all companies
       tags:
       - Companies
@@ -247,12 +261,26 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "500":
           description: Internal Server Error
           schema:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Create company
       tags:
       - Companies
@@ -272,6 +300,18 @@ paths:
       responses:
         "204":
           description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "404":
           description: Not Found
           schema:
@@ -284,6 +324,8 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Delete company
       tags:
       - Companies
@@ -304,6 +346,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Company'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "404":
           description: Not Found
           schema:
@@ -316,6 +370,8 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Get company by ID
       tags:
       - Companies
@@ -348,6 +404,18 @@ paths:
             additionalProperties:
               type: string
             type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
         "404":
           description: Not Found
           schema:
@@ -360,6 +428,8 @@ paths:
             additionalProperties:
               type: string
             type: object
+      security:
+      - Bearer: []
       summary: Update company
       tags:
       - Companies
@@ -381,7 +451,7 @@ paths:
             type: string
       summary: Get the health status of the server
       tags:
-      - health
+      - Health
   /users:
     get:
       consumes:
