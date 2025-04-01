@@ -32,6 +32,7 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 	r.registerCompanyRoutes(protected)
 	r.registerJobRoutes(protected)
 	r.registerApplicationRoutes(protected)
+	r.registerCandidateRoutes(protected)
 }
 
 func (r *Router) RegisterHealthRoutes(group *gin.RouterGroup) {
@@ -79,4 +80,13 @@ func (r *Router) registerApplicationRoutes(group *gin.RouterGroup) {
 	applicationsRouter.POST("", r.Controller.CreateApplication)
 	applicationsRouter.PUT("/:applicationId", r.Controller.UpdateApplication)
 	applicationsRouter.DELETE("/:applicationId", r.Controller.DeleteApplication)
+}
+
+func (r *Router) registerCandidateRoutes(group *gin.RouterGroup) {
+	candidatesRouter := group.Group("/candidates")
+	candidatesRouter.GET("", r.Controller.GetAllCandidates)
+	candidatesRouter.GET("/:candidateId", r.Controller.GetCandidate)
+	candidatesRouter.POST("", r.Controller.CreateCandidate)
+	candidatesRouter.PUT("/:candidateId", r.Controller.UpdateCandidate)
+	candidatesRouter.DELETE("/:candidateId", r.Controller.DeleteCandidate)
 }
