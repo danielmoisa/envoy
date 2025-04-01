@@ -10,6 +10,7 @@ type Repository struct {
 	CompaniesRepository    *CompaniesRepository
 	JobsRepository         *JobsRepository
 	ApplicationsRepository *ApplicationsRepository
+	CandidatesRepository   *CandidatesRepository
 }
 
 func NewRepository(postgresDriver *gorm.DB, logger *zap.SugaredLogger) *Repository {
@@ -18,5 +19,6 @@ func NewRepository(postgresDriver *gorm.DB, logger *zap.SugaredLogger) *Reposito
 		CompaniesRepository:    NewCompaniesRepository(logger, postgresDriver),
 		JobsRepository:         NewJobsRepository(logger, postgresDriver),
 		ApplicationsRepository: NewApplicationsRepository(logger, postgresDriver),
+		CandidatesRepository:   NewCandidatesRepository(logger, postgresDriver),
 	}
 }

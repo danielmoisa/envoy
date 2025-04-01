@@ -496,6 +496,239 @@ paths:
       summary: User logout
       tags:
       - Auth
+  /candidates:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all candidates
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Get all candidates
+      tags:
+      - Candidates
+    post:
+      consumes:
+      - application/json
+      description: Create a new candidate
+      parameters:
+      - description: Candidate Data
+        in: body
+        name: candidate
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Create candidate
+      tags:
+      - Candidates
+  /candidates/{candidateId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a candidate by ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidateId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Delete candidate
+      tags:
+      - Candidates
+    get:
+      consumes:
+      - application/json
+      description: Get a single candidate by its ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidateId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Get candidate by ID
+      tags:
+      - Candidates
+    put:
+      consumes:
+      - application/json
+      description: Update an existing candidate by ID
+      parameters:
+      - description: Candidate ID
+        in: path
+        name: candidateId
+        required: true
+        type: string
+      - description: Candidate Data
+        in: body
+        name: candidate
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Candidate'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Update candidate
+      tags:
+      - Candidates
   /companies:
     get:
       consumes:
