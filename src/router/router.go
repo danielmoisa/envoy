@@ -30,6 +30,7 @@ func (r *Router) RegisterRoutes(engine *gin.Engine) {
 	r.registerAuthRoutes(routerGroup)
 	r.registerUserRoutes(protected)
 	r.registerCompanyRoutes(protected)
+	r.registerJobRoutes(protected)
 }
 
 func (r *Router) RegisterHealthRoutes(group *gin.RouterGroup) {
@@ -59,4 +60,13 @@ func (r *Router) registerAuthRoutes(group *gin.RouterGroup) {
 	authRouter := group.Group("/auth")
 	authRouter.POST("/login", r.Controller.Login)
 	authRouter.POST("/logout", r.Controller.Logout)
+}
+
+func (r *Router) registerJobRoutes(group *gin.RouterGroup) {
+	jobsRouter := group.Group("/jobs")
+	jobsRouter.GET("", r.Controller.GetAllJobs)
+	jobsRouter.GET("/:jobId", r.Controller.GetJob)
+	jobsRouter.POST("", r.Controller.CreateJob)
+	jobsRouter.PUT("/:jobId", r.Controller.UpdateJob)
+	jobsRouter.DELETE("/:jobId", r.Controller.DeleteJob)
 }

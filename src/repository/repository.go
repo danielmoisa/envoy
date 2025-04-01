@@ -8,6 +8,7 @@ import (
 type Repository struct {
 	UsersRepository     *UsersRepository
 	CompaniesRepository *CompaniesRepository
+	JobsRepository      *JobsRepository
 }
 
 func NewRepository(postgresDriver *gorm.DB, logger *zap.SugaredLogger) *Repository {

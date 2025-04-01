@@ -45,6 +45,36 @@ definitions:
       user_id:
         type: string
     type: object
+  github_com_danielmoisa_envoy_src_model.Job:
+    properties:
+      company_id:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      job_type:
+        description: Full-time, Part-time, Contract
+        type: string
+      location:
+        type: string
+      salary_max:
+        type: number
+      salary_min:
+        type: number
+      skills:
+        items:
+          $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Skill'
+        type: array
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   github_com_danielmoisa_envoy_src_model.Skill:
     properties:
       category:
@@ -452,6 +482,239 @@ paths:
       summary: Get the health status of the server
       tags:
       - Health
+  /jobs:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all jobs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Job'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Get all jobs
+      tags:
+      - Jobs
+    post:
+      consumes:
+      - application/json
+      description: Create a new job
+      parameters:
+      - description: Job Data
+        in: body
+        name: job
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Job'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Job'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Create job
+      tags:
+      - Jobs
+  /jobs/{jobId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a job by ID
+      parameters:
+      - description: Job ID
+        in: path
+        name: jobId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Delete job
+      tags:
+      - Jobs
+    get:
+      consumes:
+      - application/json
+      description: Get a single job by its ID
+      parameters:
+      - description: Job ID
+        in: path
+        name: jobId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Job'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Get job by ID
+      tags:
+      - Jobs
+    put:
+      consumes:
+      - application/json
+      description: Update an existing job by ID
+      parameters:
+      - description: Job ID
+        in: path
+        name: jobId
+        required: true
+        type: string
+      - description: Job Data
+        in: body
+        name: job
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Job'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_danielmoisa_envoy_src_model.Job'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - Bearer: []
+      summary: Update job
+      tags:
+      - Jobs
   /users:
     get:
       consumes:
